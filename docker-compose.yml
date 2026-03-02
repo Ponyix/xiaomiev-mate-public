@@ -21,6 +21,7 @@ services:
   xiaomiev-mate:
     container_name: xiaomiev-mate
     image: ponyix/xiaomiev-mate:backend-latest
+    pull_policy: always
     volumes:
       - ./logs:/var/log/xiaomiev
     environment:
@@ -36,6 +37,7 @@ services:
   xiaomiev-mate-web:
     container_name: xiaomiev-mate-web
     image: ponyix/xiaomiev-mate:web-latest
+    pull_policy: always
     ports:
       - "18080:80"
     restart: always
