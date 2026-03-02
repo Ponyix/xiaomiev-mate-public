@@ -76,11 +76,11 @@ chmod +x deploy.sh
 
 必填字段：
 
-- `xiaomiUserId`
-- `xiaomiAccount`
-- `xiaomiPassword`（输入明文密码，后端会自动处理）
-- `xiaomiEui`
-- `xiaomiDeviceId`
+- `小米用户ID`
+- `小米登陆账号`
+- `小米登陆密码`（输入明文密码，后端会自动处理）
+- `EUI`
+- `常用设备ID` 
 
 说明：
 - 如果返回提示 **“触发验证码，请确认设备ID。”**，说明设备风控触发，需要检查 `xiaomiDeviceId` 是否正确。
@@ -95,7 +95,6 @@ chmod +x deploy.sh
 3. 在请求中查找以下字段并记录：
 
 - `小米用户ID`（通常对应接口中的 `cUserId`）
-- `小米登陆账号`
 - `常用设备ID`（请求头或参数中的DeviceId ID）
 - `Eui`（请求头中的 `EUI`）
 - `车辆ID`（车辆唯一 ID，后续添加车辆时必填）
