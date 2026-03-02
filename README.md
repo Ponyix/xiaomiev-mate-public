@@ -31,14 +31,6 @@
 
 ## 2. 部署方式
 
-部署前建议先复制环境变量模板：
-
-```bash
-cp .env.example .env
-```
-
-然后在 `.env` 中修改 `DB_PASSWORD` 等配置。
-
 ### 2.1 方式一：直接使用 `docker-compose.yml`（需要手动初始化 SQL）
 
 1. 启动服务：
@@ -53,18 +45,18 @@ docker compose -f docker-compose.yml up -d
 docker exec -i xiaomiev-postgres psql -U postgres -d xiaomi_ev < initdb/01_init.sql
 ```
 
-> 提示：如果不使用 `.env`，需要在 `docker-compose.yml` 中手动修改 `DB_PASSWORD`。
+> 提示：需要在 `docker-compose.yml` 中手动修改 `DB_PASSWORD`。
 
 ### 2.2 方式二：脚本一键部署（自动初始化 SQL）
-
-如果你希望“拉代码后一键部署”，可以使用脚本 `deploy.sh`：
-
 ```bash
 git clone git@github.com:Ponyix/xiaomiev-mate-public.git
 cd xiaomiev-mate-public
+cp .env.example .env
 chmod +x deploy.sh
 ./deploy.sh
 ```
+
+首次部署前请在 `.env` 中修改 `DB_PASSWORD`。
 
 脚本会做三件事：
 
