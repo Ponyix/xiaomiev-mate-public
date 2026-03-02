@@ -653,7 +653,6 @@ ALTER SEQUENCE "public"."sync_record_id_seq"
 -- ----------------------------
 ALTER SEQUENCE "public"."users_id_seq"
     OWNED BY "public"."sys_user"."id";
-SELECT setval('"public"."users_id_seq"', 4, true);
 
 -- ----------------------------
 -- Indexes structure for table access_log
