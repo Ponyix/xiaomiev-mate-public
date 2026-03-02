@@ -20,7 +20,7 @@ services:
 
   xiaomiev-mate:
     container_name: xiaomiev-mate
-    image: ponyix/xioamiev-mate:backend-last
+    image: ponyix/xiaomiev-mate:backend-latest
     volumes:
       - ./logs:/var/log/xiaomiev
     environment:
@@ -35,7 +35,7 @@ services:
 
   xiaomiev-mate-web:
     container_name: xiaomiev-mate-web
-    image: ponyix/xioamiev-mate:web-last
+    image: ponyix/xiaomiev-mate:web-latest
     ports:
       - "18080:80"
     restart: always
