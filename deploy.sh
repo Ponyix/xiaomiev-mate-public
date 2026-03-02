@@ -5,6 +5,22 @@ SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 COMPOSE_FILE="${SCRIPT_DIR}/docker-compose.yml"
 INIT_SQL="${SCRIPT_DIR}/initdb/01_init.sql"
 POSTGRES_CONTAINER="xiaomiev-postgres"
+ENV_FILE="${SCRIPT_DIR}/.env"
+ENV_EXAMPLE="${SCRIPT_DIR}/.env.example"
+
+if ! command -v docker >/dev/null 2>&1; then
+  echo "未检测到 Docker，请先安装 Docker。"
+  exit 1
+fi
+
+if docker compose version >/dev/null 2>&1; then
+  COMPOSE_CMD=(docker compose)
+elif command -v docker-compose >/dev/null 2>&1; then
+  COMPOSE_CMD=(docker-compose)
+else
+  echo "未检测到 docker compose，请先安装 Docker Compose。"
+  exit 1
+fi
 
 if [[ ! -f "${COMPOSE_FILE}" ]]; then
   echo "未找到 docker-compose 文件: ${COMPOSE_FILE}"
@@ -17,8 +33,13 @@ if [[ ! -f "${INIT_SQL}" ]]; then
   exit 1
 fi
 
+if [[ ! -f "${ENV_FILE}" && -f "${ENV_EXAMPLE}" ]]; then
+  echo "未检测到 .env，将使用默认数据库密码（you_password）。"
+  echo "建议先执行：cp .env.example .env 并修改 DB_PASSWORD。"
+fi
+
 echo "==> 启动服务"
-docker compose -f "${COMPOSE_FILE}" up -d
+"${COMPOSE_CMD[@]}" -f "${COMPOSE_FILE}" up -d
 
 echo "==> 等待 PostgreSQL 就绪"
 for i in {1..30}; do
