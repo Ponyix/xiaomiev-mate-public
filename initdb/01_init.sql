@@ -593,70 +593,60 @@ COMMENT ON COLUMN "public"."sys_user"."xiaomi_device_id" IS '小米设备ID';
 -- ----------------------------
 ALTER SEQUENCE "public"."access_log_id_seq"
     OWNED BY "public"."access_log"."id";
-SELECT setval('"public"."access_log_id_seq"', 1711, true);
 
 -- ----------------------------
 -- Alter sequences owned by
 -- ----------------------------
 ALTER SEQUENCE "public"."car_charge_record_id_seq"
     OWNED BY "public"."car_charge_record"."id";
-SELECT setval('"public"."car_charge_record_id_seq"', 5, true);
 
 -- ----------------------------
 -- Alter sequences owned by
 -- ----------------------------
 ALTER SEQUENCE "public"."car_id_seq"
     OWNED BY "public"."car"."id";
-SELECT setval('"public"."car_id_seq"', 23, true);
 
 -- ----------------------------
 -- Alter sequences owned by
 -- ----------------------------
 ALTER SEQUENCE "public"."car_status_history_id_seq"
     OWNED BY "public"."car_status_history"."id";
-SELECT setval('"public"."car_status_history_id_seq"', 4681, true);
 
 -- ----------------------------
 -- Alter sequences owned by
 -- ----------------------------
 ALTER SEQUENCE "public"."car_summary_id_seq"
     OWNED BY "public"."car_day_summary"."id";
-SELECT setval('"public"."car_summary_id_seq"', 309, true);
 
 -- ----------------------------
 -- Alter sequences owned by
 -- ----------------------------
 ALTER SEQUENCE "public"."car_trip_detail_id_seq"
     OWNED BY "public"."car_trip_detail"."id";
-SELECT setval('"public"."car_trip_detail_id_seq"', 930, true);
 
 -- ----------------------------
 -- Alter sequences owned by
 -- ----------------------------
 ALTER SEQUENCE "public"."car_trip_id_seq"
     OWNED BY "public"."car_trip"."id";
-SELECT setval('"public"."car_trip_id_seq"', 930, true);
 
 -- ----------------------------
 -- Alter sequences owned by
 -- ----------------------------
 ALTER SEQUENCE "public"."car_trip_month_stats_id_seq"
     OWNED BY "public"."car_trip_month_stats"."id";
-SELECT setval('"public"."car_trip_month_stats_id_seq"', 14, true);
 
 -- ----------------------------
 -- Alter sequences owned by
 -- ----------------------------
 ALTER SEQUENCE "public"."car_trip_stats_id_seq"
     OWNED BY "public"."car_trip_stats"."id";
-SELECT setval('"public"."car_trip_stats_id_seq"', 65, true);
 
 -- ----------------------------
 -- Alter sequences owned by
 -- ----------------------------
 ALTER SEQUENCE "public"."sync_record_id_seq"
     OWNED BY "public"."sync_record"."id";
-SELECT setval('"public"."sync_record_id_seq"', 1062, true);
 
 -- ----------------------------
 -- Alter sequences owned by
