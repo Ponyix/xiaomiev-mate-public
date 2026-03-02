@@ -46,6 +46,7 @@ docker exec -i xiaomiev-postgres psql -U postgres -d xiaomi_ev < initdb/01_init.
 ```
 
 > 提示：需要在 `docker-compose.yml` 中手动修改 `DB_PASSWORD`。
+> 前端访问地址：http://localhost:18080
 
 ### 2.2 方式二：脚本一键部署（自动初始化 SQL）
 ```bash
