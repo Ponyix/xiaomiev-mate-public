@@ -206,10 +206,12 @@ CREATE TABLE "public"."car" (
                                 "created" timestamp(0) DEFAULT now(),
                                 "updated" timestamp(0) DEFAULT now(),
                                 "deleted" int4 DEFAULT 0,
-                                "car_model" varchar(20) COLLATE "pg_catalog"."default"
+                                "car_model" varchar(20) COLLATE "pg_catalog"."default",
+                                "battery_health" numeric(5,2)
 )
 ;
 ALTER TABLE "public"."car" OWNER TO "postgres";
+COMMENT ON COLUMN "public"."car"."battery_health" IS '电池健康度(%)';
 
 -- ----------------------------
 -- Table structure for car_charge_record
@@ -226,13 +228,14 @@ CREATE TABLE "public"."car_charge_record" (
                                               "start_range" numeric(10,2) DEFAULT NULL::numeric,
                                               "end_range" numeric(10,2) DEFAULT NULL::numeric,
                                               "charge_range" numeric(10,2) DEFAULT NULL::numeric,
+                                              "charge_energy" numeric(10,2),
+                                              "battery_health" numeric(5,2),
                                               "duration_minutes" int4,
                                               "location_name" varchar(255) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying,
                                               "latitude" varchar(32) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying,
                                               "longitude" varchar(32) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying,
                                               "create_time" timestamp(0) DEFAULT CURRENT_TIMESTAMP,
-                                              "update_time" timestamp(0) DEFAULT CURRENT_TIMESTAMP,
-                                              "charge_energy" numeric(10,2)
+                                              "update_time" timestamp(0) DEFAULT CURRENT_TIMESTAMP
 )
 ;
 ALTER TABLE "public"."car_charge_record" OWNER TO "postgres";
@@ -251,6 +254,7 @@ COMMENT ON COLUMN "public"."car_charge_record"."location_name" IS '充电位置(
 COMMENT ON COLUMN "public"."car_charge_record"."latitude" IS '纬度';
 COMMENT ON COLUMN "public"."car_charge_record"."longitude" IS '经度';
 COMMENT ON COLUMN "public"."car_charge_record"."charge_energy" IS '充电电量(kWh)';
+COMMENT ON COLUMN "public"."car_charge_record"."battery_health" IS '电池健康度(%)';
 COMMENT ON TABLE "public"."car_charge_record" IS '车辆充电记录表';
 
 -- ----------------------------
