@@ -61,6 +61,30 @@ chmod +x deploy.sh
 
 首次部署前请在 `.env` 中修改 `DB_PASSWORD`。
 
+默认会拉取：
+
+- `ponyix/xiaomiev-mate:backend-latest`
+- `ponyix/xiaomiev-mate:web-latest`
+
+如果你希望固定部署某个版本，可以在 `.env` 中增加：
+
+```bash
+BACKEND_IMAGE_TAG=v1.0.0
+WEB_IMAGE_TAG=v1.0.0
+```
+
+或者临时指定：
+
+```bash
+BACKEND_IMAGE_TAG=v1.0.0 WEB_IMAGE_TAG=v1.0.0 ./deploy.sh
+```
+
+如果只想升级后端或前端，也可以分别指定不同版本，例如：
+
+```bash
+BACKEND_IMAGE_TAG=v1.0.1 WEB_IMAGE_TAG=v1.0.0 ./deploy.sh
+```
+
 脚本会做三件事：
 
 1. `docker compose up -d` 启动服务
@@ -149,6 +173,11 @@ chmod +x deploy.sh
 4. 为什么项目暂不开源？
     - 当前小米登录需要通过抓包获取关键参数与 token，目前无法解决该问题，因此项目暂不开源。
     - 如果你有更好的实现思路或对项目感兴趣，欢迎联系邮箱 `mkx3887@gmail.com` 一起共创与交流。
+
+5. 如何固定部署某个版本镜像？
+    - 在 `.env` 中配置 `BACKEND_IMAGE_TAG` 和 `WEB_IMAGE_TAG`
+    - 或者执行部署时临时传入环境变量
+    - 如果不配置，默认使用 `latest`
 
 ## 临时体验提示
 

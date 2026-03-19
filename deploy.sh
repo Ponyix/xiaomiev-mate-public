@@ -7,6 +7,8 @@ INIT_SQL="${SCRIPT_DIR}/initdb/01_init.sql"
 POSTGRES_CONTAINER="xiaomiev-postgres"
 ENV_FILE="${SCRIPT_DIR}/.env"
 ENV_EXAMPLE="${SCRIPT_DIR}/.env.example"
+BACKEND_IMAGE_TAG="${BACKEND_IMAGE_TAG:-latest}"
+WEB_IMAGE_TAG="${WEB_IMAGE_TAG:-latest}"
 
 if ! command -v docker >/dev/null 2>&1; then
   echo "未检测到 Docker，请先安装 Docker。"
@@ -37,6 +39,10 @@ if [[ ! -f "${ENV_FILE}" && -f "${ENV_EXAMPLE}" ]]; then
   echo "未检测到 .env，将使用默认数据库密码（you_password）。"
   echo "建议先执行：cp .env.example .env 并修改 DB_PASSWORD。"
 fi
+
+echo "==> 当前部署镜像版本"
+echo "后端镜像: ponyix/xiaomiev-mate:backend-${BACKEND_IMAGE_TAG}"
+echo "前端镜像: ponyix/xiaomiev-mate:web-${WEB_IMAGE_TAG}"
 
 echo "==> 启动服务"
 "${COMPOSE_CMD[@]}" -f "${COMPOSE_FILE}" up -d
