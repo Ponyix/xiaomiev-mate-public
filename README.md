@@ -69,14 +69,14 @@ chmod +x deploy.sh
 如果你希望固定部署某个版本，可以在 `.env` 中增加：
 
 ```bash
-BACKEND_IMAGE_TAG=v1.0.0
-WEB_IMAGE_TAG=v1.0.0
+BACKEND_IMAGE_TAG=v1.0.1
+WEB_IMAGE_TAG=v1.0.1
 ```
 
 或者临时指定：
 
 ```bash
-BACKEND_IMAGE_TAG=v1.0.0 WEB_IMAGE_TAG=v1.0.0 ./deploy.sh
+BACKEND_IMAGE_TAG=v1.0.1 WEB_IMAGE_TAG=v1.0.1 ./deploy.sh
 ```
 
 如果只想升级后端或前端，也可以分别指定不同版本，例如：
