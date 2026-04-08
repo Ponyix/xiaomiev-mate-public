@@ -99,6 +99,18 @@ CACHE 1;
 ALTER SEQUENCE "public"."car_trip_id_seq" OWNER TO "postgres";
 
 -- ----------------------------
+-- Sequence structure for car_trip_track_id_seq
+-- ----------------------------
+DROP SEQUENCE IF EXISTS "public"."car_trip_track_id_seq";
+CREATE SEQUENCE "public"."car_trip_track_id_seq"
+    INCREMENT 1
+MINVALUE  1
+MAXVALUE 9223372036854775807
+START 1
+CACHE 1;
+ALTER SEQUENCE "public"."car_trip_track_id_seq" OWNER TO "postgres";
+
+-- ----------------------------
 -- Sequence structure for car_trip_month_stats_id_seq
 -- ----------------------------
 DROP SEQUENCE IF EXISTS "public"."car_trip_month_stats_id_seq";
@@ -259,7 +271,7 @@ COMMENT ON TABLE "public"."car_charge_record" IS '车辆充电记录表';
 DROP TABLE IF EXISTS "public"."car_day_summary";
 CREATE TABLE "public"."car_day_summary" (
                                             "id" int8 NOT NULL DEFAULT nextval('car_summary_id_seq'::regclass),
-                                            "xiaomi_user_id" varchar(36) COLLATE "pg_catalog"."default" NOT NULL,
+                                            "user_id" int8 NOT NULL,
                                             "car_id" varchar(36) COLLATE "pg_catalog"."default" NOT NULL,
                                             "day_str" varchar(10) COLLATE "pg_catalog"."default" NOT NULL,
                                             "day_driving_mileage" int4,
@@ -268,7 +280,7 @@ CREATE TABLE "public"."car_day_summary" (
 )
 ;
 ALTER TABLE "public"."car_day_summary" OWNER TO "postgres";
-COMMENT ON COLUMN "public"."car_day_summary"."xiaomi_user_id" IS '小米用户ID';
+COMMENT ON COLUMN "public"."car_day_summary"."user_id" IS '系统用户ID';
 COMMENT ON COLUMN "public"."car_day_summary"."car_id" IS '汽车ID';
 COMMENT ON COLUMN "public"."car_day_summary"."day_str" IS '时间';
 COMMENT ON COLUMN "public"."car_day_summary"."day_driving_mileage" IS '当天行程里程';
@@ -319,7 +331,7 @@ COMMENT ON TABLE "public"."car_status_history" IS '车辆状态历史记录表';
 DROP TABLE IF EXISTS "public"."car_trip";
 CREATE TABLE "public"."car_trip" (
                                      "id" int8 NOT NULL DEFAULT nextval('car_trip_id_seq'::regclass),
-                                     "xiaomi_user_id" varchar(36) COLLATE "pg_catalog"."default" NOT NULL,
+                                     "user_id" int8 NOT NULL,
                                      "car_id" varchar(36) COLLATE "pg_catalog"."default" NOT NULL,
                                      "day_str" varchar(10) COLLATE "pg_catalog"."default" NOT NULL,
                                      "trip_id" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
@@ -336,7 +348,7 @@ CREATE TABLE "public"."car_trip" (
 )
 ;
 ALTER TABLE "public"."car_trip" OWNER TO "postgres";
-COMMENT ON COLUMN "public"."car_trip"."xiaomi_user_id" IS '小米用户ID';
+COMMENT ON COLUMN "public"."car_trip"."user_id" IS '系统用户ID';
 COMMENT ON COLUMN "public"."car_trip"."car_id" IS '汽车ID';
 COMMENT ON COLUMN "public"."car_trip"."day_str" IS '行程日期';
 COMMENT ON COLUMN "public"."car_trip"."trip_id" IS '行程ID';
@@ -356,7 +368,7 @@ COMMENT ON COLUMN "public"."car_trip"."updated" IS '数据修改时间';
 DROP TABLE IF EXISTS "public"."car_trip_detail";
 CREATE TABLE "public"."car_trip_detail" (
                                             "id" int8 NOT NULL DEFAULT nextval('car_trip_detail_id_seq'::regclass),
-                                            "xiaomi_user_id" varchar(36) COLLATE "pg_catalog"."default" NOT NULL,
+                                            "user_id" int8 NOT NULL,
                                             "car_id" varchar(36) COLLATE "pg_catalog"."default" NOT NULL,
                                             "trip_id" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
                                             "iccc_vid" varchar(255) COLLATE "pg_catalog"."default",
@@ -396,7 +408,7 @@ CREATE TABLE "public"."car_trip_detail" (
 )
 ;
 ALTER TABLE "public"."car_trip_detail" OWNER TO "postgres";
-COMMENT ON COLUMN "public"."car_trip_detail"."xiaomi_user_id" IS '小米用户ID';
+COMMENT ON COLUMN "public"."car_trip_detail"."user_id" IS '系统用户ID';
 COMMENT ON COLUMN "public"."car_trip_detail"."car_id" IS '汽车ID';
 COMMENT ON COLUMN "public"."car_trip_detail"."trip_id" IS '行程ID';
 COMMENT ON COLUMN "public"."car_trip_detail"."trip_start_time" IS '行程开始时间';
@@ -431,6 +443,37 @@ COMMENT ON COLUMN "public"."car_trip_detail"."start_remaining_range" IS '行程�
 COMMENT ON COLUMN "public"."car_trip_detail"."end_remaining_range" IS '行程结束剩余续航';
 COMMENT ON COLUMN "public"."car_trip_detail"."consumed_range" IS '消耗续航里程';
 COMMENT ON COLUMN "public"."car_trip_detail"."consumption_achievement_rate" IS '续航达成率';
+
+-- ----------------------------
+-- Table structure for car_trip_track
+-- ----------------------------
+DROP TABLE IF EXISTS "public"."car_trip_track";
+CREATE TABLE "public"."car_trip_track" (
+                                           "id" int8 NOT NULL DEFAULT nextval('car_trip_track_id_seq'::regclass),
+                                           "user_id" int8 NOT NULL,
+                                           "car_id" varchar(36) COLLATE "pg_catalog"."default" NOT NULL,
+                                           "trip_id" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+                                           "location_type" int4 DEFAULT 0,
+                                           "track_points" json,
+                                           "point_count" int4 DEFAULT 0,
+                                           "trip_start_time" varchar(255) COLLATE "pg_catalog"."default",
+                                           "trip_end_time" varchar(255) COLLATE "pg_catalog"."default",
+                                           "created" timestamp(0) NOT NULL DEFAULT now(),
+                                           "updated" timestamp(0) NOT NULL DEFAULT now(),
+                                           "deleted" int4 NOT NULL DEFAULT 0
+)
+;
+ALTER TABLE "public"."car_trip_track" OWNER TO "postgres";
+COMMENT ON COLUMN "public"."car_trip_track"."user_id" IS '系统用户ID';
+COMMENT ON COLUMN "public"."car_trip_track"."car_id" IS '汽车ID';
+COMMENT ON COLUMN "public"."car_trip_track"."trip_id" IS '行程ID';
+COMMENT ON COLUMN "public"."car_trip_track"."location_type" IS '轨迹类型';
+COMMENT ON COLUMN "public"."car_trip_track"."track_points" IS '完整轨迹点';
+COMMENT ON COLUMN "public"."car_trip_track"."point_count" IS '轨迹点数量';
+COMMENT ON COLUMN "public"."car_trip_track"."trip_start_time" IS '轨迹开始时间';
+COMMENT ON COLUMN "public"."car_trip_track"."trip_end_time" IS '轨迹结束时间';
+COMMENT ON COLUMN "public"."car_trip_track"."created" IS '数据创建时间';
+COMMENT ON COLUMN "public"."car_trip_track"."updated" IS '数据修改时间';
 
 -- ----------------------------
 -- Table structure for car_trip_month_stats
@@ -546,6 +589,7 @@ COMMENT ON COLUMN "public"."car_trip_stats"."updated" IS '更新时间';
 DROP TABLE IF EXISTS "public"."sync_record";
 CREATE TABLE "public"."sync_record" (
                                         "id" int8 NOT NULL DEFAULT nextval('sync_record_id_seq'::regclass),
+                                        "user_id" int8,
                                         "car_id" varchar(36) COLLATE "pg_catalog"."default",
                                         "trip_id" text COLLATE "pg_catalog"."default",
                                         "sync_type" int4,
@@ -558,7 +602,8 @@ CREATE TABLE "public"."sync_record" (
 )
 ;
 ALTER TABLE "public"."sync_record" OWNER TO "postgres";
-COMMENT ON COLUMN "public"."sync_record"."sync_type" IS '历史数据1，每天数据2';
+COMMENT ON COLUMN "public"."sync_record"."user_id" IS '系统用户ID';
+COMMENT ON COLUMN "public"."sync_record"."sync_type" IS '历史数据1，每天数据2，历史轨迹数据3';
 COMMENT ON COLUMN "public"."sync_record"."sync_status" IS '任务状态 1=进行中，2=成功，3失败，4任务取消';
 COMMENT ON COLUMN "public"."sync_record"."param" IS '请求接口传参';
 
@@ -576,6 +621,7 @@ CREATE TABLE "public"."sys_user" (
                                      "created" timestamp(0) NOT NULL DEFAULT now(),
                                      "updated" timestamp(0) NOT NULL DEFAULT now(),
                                      "deleted" int4 NOT NULL DEFAULT 0,
+                                     "user_role" int4 NOT NULL DEFAULT 1,
                                      "xiaomi_account" varchar(255) COLLATE "pg_catalog"."default",
                                      "xiaomi_password" varchar(255) COLLATE "pg_catalog"."default",
                                      "xiaomi_sign" varchar(255) COLLATE "pg_catalog"."default",
@@ -584,6 +630,7 @@ CREATE TABLE "public"."sys_user" (
 )
 ;
 ALTER TABLE "public"."sys_user" OWNER TO "postgres";
+COMMENT ON COLUMN "public"."sys_user"."user_role" IS '用户角色: 1普通用户, 9管理员';
 COMMENT ON COLUMN "public"."sys_user"."xiaomi_account" IS '小米账号';
 COMMENT ON COLUMN "public"."sys_user"."xiaomi_password" IS '小米密码';
 COMMENT ON COLUMN "public"."sys_user"."xiaomi_sign" IS '小米签名';
@@ -631,6 +678,12 @@ ALTER SEQUENCE "public"."car_trip_detail_id_seq"
 -- ----------------------------
 ALTER SEQUENCE "public"."car_trip_id_seq"
     OWNED BY "public"."car_trip"."id";
+
+-- ----------------------------
+-- Alter sequences owned by
+-- ----------------------------
+ALTER SEQUENCE "public"."car_trip_track_id_seq"
+    OWNED BY "public"."car_trip_track"."id";
 
 -- ----------------------------
 -- Alter sequences owned by
@@ -709,6 +762,9 @@ CREATE UNIQUE INDEX "uk_car_day_summary_car_day" ON "public"."car_day_summary" U
     "car_id" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST,
     "day_str" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
     );
+CREATE INDEX "idx_car_day_summary_user_id" ON "public"."car_day_summary" USING btree (
+    "user_id" "pg_catalog"."int8_ops" ASC NULLS LAST
+    );
 
 -- ----------------------------
 -- Primary Key structure for table car_day_summary
@@ -739,6 +795,9 @@ CREATE INDEX "idx_car_trip_car_start_time" ON "public"."car_trip" USING btree (
     "car_id" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST,
     "trip_start_time" "pg_catalog"."int8_ops" DESC NULLS FIRST
     );
+CREATE INDEX "idx_car_trip_user_id" ON "public"."car_trip" USING btree (
+    "user_id" "pg_catalog"."int8_ops" ASC NULLS LAST
+    );
 CREATE UNIQUE INDEX "uk_car_trip_trip_id" ON "public"."car_trip" USING btree (
     "trip_id" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
     );
@@ -758,6 +817,9 @@ CREATE INDEX "idx_car_trip_detail_car_time" ON "public"."car_trip_detail" USING 
     "car_id" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST,
     "trip_start_time" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
     );
+CREATE INDEX "idx_car_trip_detail_user_id" ON "public"."car_trip_detail" USING btree (
+    "user_id" "pg_catalog"."int8_ops" ASC NULLS LAST
+    );
 CREATE UNIQUE INDEX "uk_car_trip_detail_trip_id" ON "public"."car_trip_detail" USING btree (
     "trip_id" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
     );
@@ -769,6 +831,22 @@ CREATE UNIQUE INDEX "uk_car_trip_detail_trip_id_deleted_0" ON "public"."car_trip
 -- Primary Key structure for table car_trip_detail
 -- ----------------------------
 ALTER TABLE "public"."car_trip_detail" ADD CONSTRAINT "car_trip_detail_pkey" PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Indexes structure for table car_trip_track
+-- ----------------------------
+CREATE INDEX "idx_car_trip_track_car_updated" ON "public"."car_trip_track" USING btree (
+    "car_id" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST,
+    "updated" DESC
+    );
+CREATE UNIQUE INDEX "uk_car_trip_track_trip_id_deleted_0" ON "public"."car_trip_track" USING btree (
+    "trip_id" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+    ) WHERE deleted = 0;
+
+-- ----------------------------
+-- Primary Key structure for table car_trip_track
+-- ----------------------------
+ALTER TABLE "public"."car_trip_track" ADD CONSTRAINT "car_trip_track_pkey" PRIMARY KEY ("id");
 
 -- ----------------------------
 -- Indexes structure for table car_trip_month_stats
@@ -813,6 +891,10 @@ CREATE INDEX "idx_sync_record_query" ON "public"."sync_record" USING btree (
     "sync_type" "pg_catalog"."int4_ops" ASC NULLS LAST,
     "created" "pg_catalog"."timestamp_ops" ASC NULLS LAST
     );
+CREATE INDEX "idx_sync_record_user_created" ON "public"."sync_record" USING btree (
+    "user_id" "pg_catalog"."int8_ops" ASC NULLS LAST,
+    "created" "pg_catalog"."timestamp_ops" ASC NULLS LAST
+    );
 
 -- ----------------------------
 -- Primary Key structure for table sync_record
@@ -827,6 +909,9 @@ CREATE UNIQUE INDEX "uk_sys_user_username" ON "public"."sys_user" USING btree (
     );
 CREATE UNIQUE INDEX "uk_sys_user_xiaomi_id" ON "public"."sys_user" USING btree (
     "xiaomi_user_id" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+    );
+CREATE INDEX "idx_sys_user_role" ON "public"."sys_user" USING btree (
+    "user_role" "pg_catalog"."int4_ops" ASC NULLS LAST
     );
 
 -- ----------------------------
