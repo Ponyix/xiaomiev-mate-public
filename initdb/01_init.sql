@@ -624,7 +624,7 @@ CREATE TABLE "public"."sys_user" (
                                      "user_role" int4 NOT NULL DEFAULT 1,
                                      "xiaomi_account" varchar(255) COLLATE "pg_catalog"."default",
                                      "xiaomi_password" varchar(255) COLLATE "pg_catalog"."default",
-                                     "xiaomi_sign" varchar(255) COLLATE "pg_catalog"."default",
+                                     "xiaomi_sign" text COLLATE "pg_catalog"."default",
                                      "xiaomi_eui" text COLLATE "pg_catalog"."default",
                                      "xiaomi_device_id" varchar(255) COLLATE "pg_catalog"."default"
 )
@@ -923,3 +923,61 @@ ALTER TABLE "public"."sys_user" ADD CONSTRAINT "user_name" UNIQUE ("user_name");
 -- Primary Key structure for table sys_user
 -- ----------------------------
 ALTER TABLE "public"."sys_user" ADD CONSTRAINT "users_pkey" PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Sequence structure for notify_event_subscription_id_seq
+-- ----------------------------
+DROP SEQUENCE IF EXISTS "public"."notify_event_subscription_id_seq";
+CREATE SEQUENCE "public"."notify_event_subscription_id_seq"
+    INCREMENT 1
+MINVALUE 1
+MAXVALUE 9223372036854775807
+START 1
+CACHE 1;
+ALTER SEQUENCE "public"."notify_event_subscription_id_seq" OWNER TO "postgres";
+
+-- ----------------------------
+-- Table structure for notify_event_subscription
+-- ----------------------------
+DROP TABLE IF EXISTS "public"."notify_event_subscription";
+CREATE TABLE "public"."notify_event_subscription" (
+    "id" int8 NOT NULL DEFAULT nextval('notify_event_subscription_id_seq'::regclass),
+    "user_id" int8 NOT NULL,
+    "platform" varchar(32) COLLATE "pg_catalog"."default" NOT NULL,
+    "value_box" text COLLATE "pg_catalog"."default",
+    "event_codes" text COLLATE "pg_catalog"."default",
+    "enabled" int4 NOT NULL DEFAULT 0,
+    "created" timestamp(0) NOT NULL DEFAULT now(),
+    "updated" timestamp(0) NOT NULL DEFAULT now(),
+    "deleted" int4 NOT NULL DEFAULT 0
+);
+ALTER TABLE "public"."notify_event_subscription" OWNER TO "postgres";
+COMMENT ON COLUMN "public"."notify_event_subscription"."user_id" IS '系统用户ID';
+COMMENT ON COLUMN "public"."notify_event_subscription"."platform" IS '机器人平台: WECOM/DINGTALK/FEISHU';
+COMMENT ON COLUMN "public"."notify_event_subscription"."value_box" IS '平台扩展参数JSON';
+COMMENT ON COLUMN "public"."notify_event_subscription"."event_codes" IS '事件编码白名单, 逗号分隔, 为空表示全量事件';
+COMMENT ON COLUMN "public"."notify_event_subscription"."enabled" IS '是否启用: 1启用, 0禁用';
+COMMENT ON TABLE "public"."notify_event_subscription" IS '通知事件订阅';
+
+-- ----------------------------
+-- Alter sequences owned by
+-- ----------------------------
+ALTER SEQUENCE "public"."notify_event_subscription_id_seq"
+    OWNED BY "public"."notify_event_subscription"."id";
+
+-- ----------------------------
+-- Indexes structure for table notify_event_subscription
+-- ----------------------------
+CREATE INDEX "idx_notify_subscription_user_enabled" ON "public"."notify_event_subscription" USING btree (
+    "user_id" "pg_catalog"."int8_ops" ASC NULLS LAST,
+    "enabled" "pg_catalog"."int4_ops" ASC NULLS LAST
+    );
+CREATE UNIQUE INDEX "uk_notify_subscription_user_platform_deleted_0" ON "public"."notify_event_subscription" USING btree (
+    "user_id" "pg_catalog"."int8_ops" ASC NULLS LAST,
+    "platform" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+    ) WHERE deleted = 0;
+
+-- ----------------------------
+-- Primary Key structure for table notify_event_subscription
+-- ----------------------------
+ALTER TABLE "public"."notify_event_subscription" ADD CONSTRAINT "notify_event_subscription_pkey" PRIMARY KEY ("id");

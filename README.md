@@ -96,15 +96,20 @@ BACKEND_IMAGE_TAG=v1.0.1 WEB_IMAGE_TAG=v1.0.0 ./deploy.sh
 
 ## 3. 登录与小米账号配置
 
-进入 Web 端“个人中心”，填写小米账号信息并点击 **“测试获取Token并保存”**。
+目前支持两种方式获取并保存小米登录态：
 
-必填字段：
+### 3.1 方式一：二维码登录（推荐）
 
-- `小米用户ID`
+进入 Web 端“个人中心”，点击 **“二维码登录并保存”**。
+
+### 3.2 方式二：账号密码登录
+
+进入 Web 端“个人中心”，填写以下字段后点击 **“测试获取Token并保存”**：
+
 - `小米登陆账号`
 - `小米登陆密码`（输入明文密码，后端会自动处理）
 - `EUI`
-- `常用设备ID` 
+- `常用设备ID`
 
 说明：
 - 如果返回提示 **“触发验证码，请确认设备ID。”**，说明设备风控触发，需要检查 `常用设备ID` 是否正确。
@@ -118,10 +123,9 @@ BACKEND_IMAGE_TAG=v1.0.1 WEB_IMAGE_TAG=v1.0.0 ./deploy.sh
 2. 打开小米汽车 App 并执行登录或刷新车辆信息操作。
 3. 在请求中查找以下字段并记录：
 
-- `小米用户ID`（通常对应接口中的 `cUserId`）
-- `常用设备ID`（请求头或参数中的DeviceId ID）
-- `Eui`（请求头中的 `EUI`）
-- `车辆ID`（vid 车辆唯一 ID，后续添加车辆时必填）
+- `常用设备ID`：在小米 `/pass/serviceLoginAuth2` 接口的 `Cookie` 中查找 `deviceId`
+- `EUI`：在小米 `/pass/serviceLoginAuth2` 接口的请求头中查找 `EUI`
+- `车辆ID`：车辆唯一标识 `vid`，后续在“车辆管理”中添加车辆时必填
 
 将这些信息填写到“个人中心”，完成保存。
 
@@ -187,6 +191,11 @@ BACKEND_IMAGE_TAG=v1.0.1 WEB_IMAGE_TAG=v1.0.0 ./deploy.sh
 docker compose -f docker-compose.yml down
 rm -rf pgdata logs
 ```
+
+## 致谢
+
+- 感谢 [guopenglong](https://github.com/guopenglong) 提供的小米扫码登录解决方案。
+
 ## 截图预览
 
 ![监控大屏](效果图/监控大屏.png)
