@@ -129,7 +129,6 @@ BACKEND_IMAGE_TAG=v1.0.1 WEB_IMAGE_TAG=v1.0.0 ./deploy.sh
 
 - `常用设备ID`：在小米 `/pass/serviceLoginAuth2` 接口的 `Cookie` 中查找 `deviceId`
 - `EUI`：在小米 `/pass/serviceLoginAuth2` 接口的请求头中查找 `EUI`
-- `车辆ID`：车辆唯一标识 `vid`，后续在“车辆管理”中添加车辆时必填
 
 将这些信息填写到“个人中心”，完成保存。
 
@@ -137,10 +136,7 @@ BACKEND_IMAGE_TAG=v1.0.1 WEB_IMAGE_TAG=v1.0.0 ./deploy.sh
 
 在“车辆管理”中添加车辆：
 
-- `车辆ID` 必填（需通过抓包获取）
-- `车型` 必填（需匹配车型列表）
-
-如果提示“小米账号信息不完整”，请先完成第 3 步配置。
+点击“添加车辆”，系统将自动获取当前小米账号下的车辆列表（需先登录小米账号）。
 
 ## 6. 数据同步
 
@@ -175,7 +171,6 @@ BACKEND_IMAGE_TAG=v1.0.1 WEB_IMAGE_TAG=v1.0.0 ./deploy.sh
     - 重新抓包确认 `EUI`
 
 3. 无法拉取车辆：
-    - 确认车辆 ID 已添加
     - 确认小米账号信息已保存
 
 4. 为什么项目暂不开源？
