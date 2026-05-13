@@ -3,12 +3,11 @@ set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 COMPOSE_FILE="${SCRIPT_DIR}/docker-compose.yml"
-INIT_SQL="${SCRIPT_DIR}/initdb/01_init.sql"
 POSTGRES_CONTAINER="xiaomiev-postgres"
+BACKEND_CONTAINER="xiaomiev-mate"
+WEB_CONTAINER="xiaomiev-mate-web"
 ENV_FILE="${SCRIPT_DIR}/.env"
 ENV_EXAMPLE="${SCRIPT_DIR}/.env.example"
-BACKEND_IMAGE_TAG="${BACKEND_IMAGE_TAG:-latest}"
-WEB_IMAGE_TAG="${WEB_IMAGE_TAG:-latest}"
 
 if ! command -v docker >/dev/null 2>&1; then
   echo "未检测到 Docker，请先安装 Docker。"
@@ -29,16 +28,19 @@ if [[ ! -f "${COMPOSE_FILE}" ]]; then
   exit 1
 fi
 
-if [[ ! -f "${INIT_SQL}" ]]; then
-  echo "未找到初始化 SQL: ${INIT_SQL}"
-  echo "请将 SQL 放置到 initdb/01_init.sql 后再执行。"
-  exit 1
-fi
-
 if [[ ! -f "${ENV_FILE}" && -f "${ENV_EXAMPLE}" ]]; then
-  echo "未检测到 .env，将使用默认数据库密码（you_password）。"
+  echo "未检测到 .env，将使用 docker-compose.yml 中的默认数据库密码。"
   echo "建议先执行：cp .env.example .env 并修改 DB_PASSWORD。"
 fi
+
+if [[ -f "${ENV_FILE}" ]]; then
+  set -a
+  source "${ENV_FILE}"
+  set +a
+fi
+
+BACKEND_IMAGE_TAG="${BACKEND_IMAGE_TAG:-latest}"
+WEB_IMAGE_TAG="${WEB_IMAGE_TAG:-latest}"
 
 echo "==> 当前部署镜像版本"
 echo "后端镜像: ponyix/xiaomiev-mate:backend-${BACKEND_IMAGE_TAG}"
@@ -60,14 +62,33 @@ if ! docker inspect -f '{{.State.Health.Status}}' "${POSTGRES_CONTAINER}" 2>/dev
   exit 1
 fi
 
-echo "==> 检查是否已初始化"
-TABLE_EXISTS=$(docker exec -i "${POSTGRES_CONTAINER}" psql -U postgres -d xiaomi_ev -tAc "select 1 from information_schema.tables where table_name='sys_user' limit 1;")
+echo "==> 等待后端服务启动"
+for i in {1..30}; do
+  BACKEND_STATUS=$(docker inspect -f '{{.State.Status}}' "${BACKEND_CONTAINER}" 2>/dev/null || true)
+  if [[ "${BACKEND_STATUS}" == "running" ]]; then
+    break
+  fi
+  if [[ "${BACKEND_STATUS}" == "exited" || "${BACKEND_STATUS}" == "dead" ]]; then
+    echo "后端服务启动失败，请查看日志："
+    echo "${COMPOSE_CMD[*]} -f ${COMPOSE_FILE} logs ${BACKEND_CONTAINER}"
+    exit 1
+  fi
+  sleep 2
+done
 
-if [[ "${TABLE_EXISTS}" == "1" ]]; then
-  echo "数据库已初始化，跳过 SQL 执行。"
-  exit 0
+if [[ "$(docker inspect -f '{{.State.Status}}' "${BACKEND_CONTAINER}" 2>/dev/null || true)" != "running" ]]; then
+  echo "后端服务未正常运行，请查看日志："
+  echo "${COMPOSE_CMD[*]} -f ${COMPOSE_FILE} logs ${BACKEND_CONTAINER}"
+  exit 1
 fi
 
-echo "==> 执行初始化 SQL"
-docker exec -i "${POSTGRES_CONTAINER}" psql -U postgres -d xiaomi_ev < "${INIT_SQL}"
-echo "==> 初始化完成"
+if [[ "$(docker inspect -f '{{.State.Status}}' "${WEB_CONTAINER}" 2>/dev/null || true)" != "running" ]]; then
+  echo "前端服务未正常运行，请查看日志："
+  echo "${COMPOSE_CMD[*]} -f ${COMPOSE_FILE} logs ${WEB_CONTAINER}"
+  exit 1
+fi
+
+echo "==> 部署完成"
+echo "==> 前端访问地址: http://localhost:18080"
+echo "==> 默认账号密码: admin"
+echo "如果是首次部署,登陆后请立即修改密码"
