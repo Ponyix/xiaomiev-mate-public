@@ -1,58 +1,56 @@
-# 小米汽车 Mate 使用教程（快速上手）
-面向小米汽车数据管理的前后端服务，提供车辆管理、行程分析、充电分析、状态趋势、综合统计与日志分析能力。
+# 🚗 Xiaomi EV Mate
 
-## 快速入口
+![Docker Image](https://img.shields.io/badge/Docker-ponyix%2Fxiaomiev--mate-2496ED?logo=docker&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql&logoColor=white)
+![Deploy](https://img.shields.io/badge/Deploy-Docker%20Compose-0db7ed?logo=docker&logoColor=white)
 
-| 场景 | 跳转 |
+Xiaomi EV Mate 是一个面向小米汽车车主的私有化数据管理工具，用于统一查看车辆状态、行程记录、充电分析、车况历史、统计数据和月度报告。
+
+> 建议部署在 NAS、家庭服务器或个人云主机等私有环境中。项目会保存车辆、行程和账号相关配置，请妥善保管数据库、日志和 `.env` 文件。
+
+## ✨ 快速入口
+
+| 入口 | 链接 |
 | --- | --- |
-| 默认账号 | [首次启动与默认账号](#1-首次启动与默认账号) |
-| 部署方式 | [部署方式](#2-部署方式) |
-| 账号配置 | [登录与小米账号配置](#3-登录与小米账号配置) |
-| 账号配置图文指南 | [小米账号配置指南](https://my.feishu.cn/wiki/NxHPwJOQbiT3sQkpEGscCkZbngh) |
-| 抓包说明 | [小米账号信息获取](#4-小米账号信息获取抓包) |
-| 添加车辆 | [添加车辆](#5-添加车辆) |
-| 数据同步 | [数据同步](#6-数据同步) |
-| 版本更新 | [查看版本更新说明](upgrade/) |
-| 常见问题 | [常见问题](#7-常见问题) |
-| 临时体验提示 | [临时体验提示](#临时体验提示) |
+| 🌐 官网首页 | [官方网站](http://www.xiaomievmate.com/) |
+| 📘 快速开始 | [快速开始文档](http://www.xiaomievmate.com/issues/quick-start) |
+| 🚀 部署指南 | [部署指南](http://www.xiaomievmate.com/issues/deploy) |
+| 🔐 小米账号配置 | [账号配置指南](http://www.xiaomievmate.com/issues/account) |
+| 🧭 常见问题 | [FAQ](http://www.xiaomievmate.com/issues/faq) |
+| 📝 更新日志 | [Changelog](http://www.xiaomievmate.com/changelog) |
+| 🐳 Docker Hub | [镜像仓库](https://hub.docker.com/r/ponyix/xiaomiev-mate) |
 
-## 部署建议与免责声明
+## 🧩 功能概览
 
-- 推荐在**私有环境**部署（如 NAS / 家庭服务器 / 个人云主机），避免暴露在公网。
-- 本项目仅用于个人学习与数据管理，请遵守当地法律法规与小米服务协议。
-- 因使用本项目导致的账号风控、服务异常或数据损失等风险，请自行承担。
-- 部分参数需通过抓包获取，需具备基本抓包能力并自行承担相关风险。
+- 📊 **监控大屏**：查看车辆状态、续航、电量、温度等概览信息
+- 🛣️ **行程记录**：同步历史行程，查看行程详情和轨迹
+- 🔋 **充电记录**：查看充电历史、充入电量、充电功率和充电过程曲线
+- 📈 **数据统计**：汇总里程、能耗、充电、用车习惯等指标
+- 🧾 **车况历史**：记录车辆状态变化，辅助分析异常波动
+- 📅 **月度报告**：同步小米汽车侧月度行车报告
+- 🔔 **事件通知**：支持充电、车况等事件通知配置
 
-## 1. 首次启动与默认账号
+## 🐳 Docker 镜像
 
-系统首次启动时，会自动创建管理员账号：
+项目镜像发布在 Docker Hub：
 
-- 用户名：`admin`
-- 密码：`admin`
+- Docker Hub：[镜像仓库](https://hub.docker.com/r/ponyix/xiaomiev-mate)
+- 后端镜像：`ponyix/xiaomiev-mate:backend-latest`
+- 前端镜像：`ponyix/xiaomiev-mate:web-latest`
 
-首次登录后请立即修改密码。
+如果需要固定版本，可以使用类似下面的标签：
 
-## 2. 部署方式
-
-### 2.1 方式一：直接使用 `docker-compose.yml`（需要手动初始化 SQL）
-
-1. 启动服务：
-
-```bash
-docker compose -f docker-compose.yml up -d
+```text
+ponyix/xiaomiev-mate:backend-v1.0.x
+ponyix/xiaomiev-mate:web-v1.0.x
 ```
 
-2. 手动初始化数据库：
+最新版本号请查看：[更新日志](http://www.xiaomievmate.com/changelog)。
 
-```bash
-docker exec -i xiaomiev-postgres psql -U postgres -d xiaomi_ev < initdb/01_init.sql
-```
+## 🚀 快速部署
 
-> 提示：需要在 `docker-compose.yml` 中手动修改 `DB_PASSWORD`。
+推荐使用脚本一键部署：
 
-> 前端访问地址：http://localhost:18080
-> 
-### 2.2 方式二：脚本一键部署（自动初始化 SQL）
 ```bash
 git clone git@github.com:Ponyix/xiaomiev-mate-public.git
 cd xiaomiev-mate-public
@@ -61,156 +59,114 @@ chmod +x deploy.sh
 ./deploy.sh
 ```
 
-首次部署前请在 `.env` 中修改 `DB_PASSWORD`。
-
-默认会拉取：
-
-- `ponyix/xiaomiev-mate:backend-latest`
-- `ponyix/xiaomiev-mate:web-latest`
-
-如果你希望固定部署某个版本，可以在 `.env` 中增加：
+首次部署前，请先修改 `.env` 中的数据库密码：
 
 ```bash
-BACKEND_IMAGE_TAG=v1.0.1
-WEB_IMAGE_TAG=v1.0.1
+DB_PASSWORD=your_password
 ```
 
-或者临时指定：
+部署完成后，在浏览器访问本机或部署设备的 `18080` 端口。
+
+更完整的部署说明、端口配置和版本固定方式，请阅读：[部署指南](http://www.xiaomievmate.com/issues/deploy)。
+
+## 📌 固定版本部署
+
+如果不想使用 `latest`，可以在 `.env` 中固定镜像版本：
 
 ```bash
-BACKEND_IMAGE_TAG=v1.0.1 WEB_IMAGE_TAG=v1.0.1 ./deploy.sh
+BACKEND_IMAGE_TAG=v1.0.x
+WEB_IMAGE_TAG=v1.0.x
 ```
 
-如果只想升级后端或前端，也可以分别指定不同版本，例如：
+也可以执行部署时临时指定：
 
 ```bash
-BACKEND_IMAGE_TAG=v1.0.1 WEB_IMAGE_TAG=v1.0.0 ./deploy.sh
+BACKEND_IMAGE_TAG=v1.0.x WEB_IMAGE_TAG=v1.0.x ./deploy.sh
 ```
 
-脚本会做三件事：
+## 🧱 手动 Docker Compose 部署
 
-1. `docker compose up -d` 启动服务
-2. 等待 PostgreSQL 健康
-3. 若数据库未初始化，则自动执行 `initdb/01_init.sql`
+如果你希望自己控制 Compose 配置，可以直接使用仓库中的 `docker-compose.yml`：
 
-> 注意：脚本依赖 `docker-compose.yml` 和 `initdb/01_init.sql` 同目录存在。  
-> 如果数据库已初始化，会自动跳过 SQL 执行。
+```bash
+docker compose -f docker-compose.yml up -d
+```
 
-## 3. 登录与小米账号配置
+手动部署时请确认数据库密码已正确配置，并保证后端环境变量中的数据库密码与 PostgreSQL 密码一致。
 
-登录小米账号分为 **手动配置** 和 **扫码登录** 两步，在 Web 端 **个人中心 → 登录小米账号** 中完成。
-详细图文版请参考：[小米账号配置指南](https://my.feishu.cn/wiki/NxHPwJOQbiT3sQkpEGscCkZbngh)。
+完整 Compose 示例和参数说明请阅读：[部署指南](http://www.xiaomievmate.com/issues/deploy)。
 
-### 方式一：手动配置
+## 📚 NAS 图文教程
 
-切换到 **”手动配置”** 标签页，填写以下字段：
+如果你使用 NAS 部署，可以参考线上图文教程：
 
-| 字段 | 说明 |
-| --- | --- |
-| 小米登陆账号 | 小米账号（手机号或邮箱） |
-| 小米登陆密码 | 明文密码，后端会自动处理 |
-| EUI | 通过抓包获取 |
-| 常用设备ID | 获取方式见下方说明 |
+- 🟢 绿联 NAS 安装教程：[查看教程](http://www.xiaomievmate.com/issues/ugnas)
+- 🟣 极空间安装教程：[查看教程](http://www.xiaomievmate.com/issues/zspace)
 
-填写完成后点击 **”检查配置”** 验证参数是否正确，再点击 **”保存”**。
+## 🔑 首次登录
 
-#### 常用设备ID 获取方式
+系统首次启动时会自动创建管理员账号：
 
-- **小米手机用户**：点击输入框旁的 **”获取设备”** 按钮，系统将自动获取当前账号下的设备列表，选择当前正在登录小米汽车 App 的设备即可。（仅支持小米设备）
-- **其他安卓设备 / iOS 用户**：需要通过抓包手动获取设备 ID，详见 [小米账号信息获取（抓包）](#4-小米账号信息获取抓包)。
-> 如果提示 **”触发验证码，请确认设备ID”**，说明设备风控触发，需要检查常用设备ID 是否正确。
+```text
+用户名：admin
+密码：admin
+```
 
-### 方式二：二维码登录
+首次登录后请立即修改默认密码。
 
-配置保存后，切换到 **”二维码登录”** 标签页，使用小米汽车 App 扫码完成登录授权。
+## 🔐 小米账号配置
 
-扫码成功后系统会自动关联账号并获取车辆列表。
+进入 Web 端 **个人中心 → 登录小米账号**，按页面提示完成小米账号配置。
 
+不同设备的推荐方式略有区别：
 
-## 4. 小米账号信息获取（抓包）
+- 📱 **小米手机**：优先使用二维码登录，并选择当前登录小米汽车 App 的设备
+- 🍎 **iPhone**：推荐手动配置，抓包获取 `EUI` 和 `deviceId`
+- 🤖 **非小米安卓**：通常使用二维码登录，并手动填写 `deviceId`
 
-EUI 和常用设备ID 需要通过抓包获取，步骤建议如下：
+账号配置涉及敏感信息，详细图文步骤请参考：[小米账号配置指南](http://www.xiaomievmate.com/issues/account)。
 
-1. 使用抓包工具（例如 Charles、Reqable、Stream）对手机网络进行代理。
-2. 打开小米汽车 App 并执行登录或刷新车辆信息操作。
-3. 在请求中查找以下字段并记录：
+## 🧭 添加车辆与同步数据
 
-| 字段 | 查找位置 |
-| --- | --- |
-| 常用设备ID | 小米 `/pass/serviceLoginAuth2` 接口的 `Cookie` 中查找 `deviceId` |
-| EUI | 小米 `/pass/serviceLoginAuth2` 接口的请求头中查找 `EUI` |
+登录后按下面顺序完成初始化：
 
-将这些信息填写到”个人中心 → 登录小米账号 → 手动配置”中，完成保存。
+1. 进入 **车辆管理 → 添加车辆**
+2. 选择需要同步数据的小米汽车
+3. 进入 **个人中心 → 车辆管理 → 数据同步**
+4. 首次部署建议执行一次完整历史行程和月度报告同步
 
-> **提示**：如果你使用的是小米手机，常用设备ID 可以通过”获取设备”按钮自动获取，无需抓包。
+更完整的新手流程请阅读：[快速开始](http://www.xiaomievmate.com/issues/quick-start)。
 
-## 5. 添加车辆
+## 🧹 临时体验清理
 
-在“车辆管理”中添加车辆：
-
-点击“添加车辆”，系统将自动获取当前小米账号下的车辆列表（需先登录小米账号）。
-
-## 6. 数据同步
-
-首次部署建议先执行一次“同步全部历史行程和月度行程报告”，用于补齐历史数据。
-
-路径：个人中心 -> 车辆管理 -> 数据同步
-
-三个按钮说明：
-
-1. 同步当天行程  
-   程序日常会自动同步行程，此按钮属于“补偿机制”，用于在自动同步未及时获取到当天行程时手动补齐。
-
-2. 同步全部历史行程和月度行程报告  
-   拉取“当前车辆”的历史行程，并同步历史月度行车报告（适合首次部署或补全历史）。
-
-3. 同步上月行车报告  
-   一般用于月初行车报告数据不完整时的补偿机制。
-
-行程同步机制：
-在行车结束后几分钟内会同步到数据，若遇到小米侧生成延迟或网络波动，可使用“同步当天行程”进行补偿。
-
-注：行程数据在小米汽车侧 2025 年 3 月上线，最早仅能获取到 2025 年 3 月份之后的数据。
-
-## 7. 常见问题
-
-1. 检查配置失败：
-    - 请确认抓包字段是否完整
-    - 检查设备 ID 是否正确
-
-2. 触发验证码：
-    - 更换或修正 `常用设备ID`
-    - 重新抓包确认 `EUI`
-
-3. 无法拉取车辆：
-    - 确认小米账号信息已保存并完成扫码登录
-
-4. "获取设备"按钮提示不支持：
-    - 自动获取设备仅支持小米手机，其他安卓设备或 iOS 需通过抓包获取设备 ID
-
-5. 问题反馈或需求反馈：
-    - 欢迎提交 Issue：[https://github.com/Ponyix/xiaomiev-mate-public/issues](https://github.com/Ponyix/xiaomiev-mate-public/issues)
-    - 也可以发送邮件到 `ponyix2026@gmail.com`
-
-6. 如何固定部署某个版本镜像？
-    - 在 `.env` 中配置 `BACKEND_IMAGE_TAG` 和 `WEB_IMAGE_TAG`
-    - 或者执行部署时临时传入环境变量
-    - 如果不配置，默认使用 `latest`
-
-## 临时体验提示
-
-如果仅做临时体验，建议 **24 小时内删除容器与数据**，避免敏感信息残留：
+如果只是临时体验，建议体验结束后删除容器与本地数据，避免敏感信息残留：
 
 ```bash
 docker compose -f docker-compose.yml down
 rm -rf pgdata logs
 ```
 
-## 致谢
+## 🛟 反馈与支持
+
+部署或使用中遇到问题时，优先查看：[常见问题](http://www.xiaomievmate.com/issues/faq)。
+
+也可以通过以下方式反馈：
+
+- GitHub Issues：[提交问题](https://github.com/Ponyix/xiaomiev-mate-public/issues)
+- 邮箱：`ponyix2026@gmail.com`
+
+## ⚠️ 免责声明
+
+- 本项目仅用于个人学习与数据管理，请遵守当地法律法规与小米服务协议。
+- 车辆、行程、账号配置等数据较敏感，请仅部署在可信环境中。
+- 因使用本项目导致的账号风控、服务异常、数据损失等风险，请自行承担。
+- 抓包、扫码登录等操作请确认由本人授权并妥善保存敏感信息。
+
+## 🙏 致谢
 
 - 感谢 [guopenglong](https://github.com/guopenglong) 提供的小米扫码登录解决方案。
 
-## 截图预览
+## 🖼️ 截图预览
 
 ![监控大屏](效果图/监控大屏.png)
 ![统计数据1](效果图/统计数据1.png)
