@@ -10,15 +10,16 @@ Xiaomi EV Mate 是一个面向小米汽车车主的私有化数据管理工具�
 
 ## ✨ 快速入口
 
-| 入口 | 链接 |
-| --- | --- |
-| 🌐 官网首页 | [官方网站](http://www.xiaomievmate.com/) |
+| 入口 | 链接                                                       |
+| --- |----------------------------------------------------------|
+| 🌐 官网首页 | [官方网站](http://www.xiaomievmate.com/)                     |
+| 🎮 在线演示 | [体验演示站](https://www.xiaomimate.com)                      |
 | 📘 快速开始 | [快速开始文档](http://www.xiaomievmate.com/issues/quick-start) |
-| 🚀 部署指南 | [部署指南](http://www.xiaomievmate.com/issues/deploy) |
-| 🔐 小米账号配置 | [账号配置指南](http://www.xiaomievmate.com/issues/account) |
-| 🧭 常见问题 | [FAQ](http://www.xiaomievmate.com/issues/faq) |
-| 📝 更新日志 | [Changelog](http://www.xiaomievmate.com/changelog) |
-| 🐳 Docker Hub | [镜像仓库](https://hub.docker.com/r/ponyix/xiaomiev-mate) |
+| 🚀 部署指南 | [部署指南](http://www.xiaomievmate.com/issues/deploy)        |
+| 🔐 小米账号配置 | [账号配置指南](http://www.xiaomievmate.com/issues/account)     |
+| 🧭 常见问题 | [FAQ](http://www.xiaomievmate.com/issues/faq)            |
+| 📝 更新日志 | [Changelog](http://www.xiaomievmate.com/changelog)       |
+| 🐳 Docker Hub | [镜像仓库](https://hub.docker.com/r/ponyix/xiaomiev-mate)    |
 
 ## 🧩 功能概览
 
