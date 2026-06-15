@@ -50,7 +50,20 @@ ponyix/xiaomiev-mate:web-v1.0.x
 
 ## 🚀 快速部署
 
-推荐使用脚本一键部署：
+### Linux 一键安装
+
+Linux 用户推荐使用官网安装脚本，自动检查 Docker 并部署最新版本：
+
+```bash
+curl -fSsL 'https://www.xiaomievmate.com/scripts/install.sh' | sudo bash
+```
+
+首次安装时，脚本会提示输入数据库密码。详细说明请阅读：
+[Linux 一键安装教程](https://www.xiaomievmate.com/issues/linux)。
+
+### Docker Compose 部署
+
+需要通过 `docker-compose.yml` 控制端口、目录或镜像版本时，可以使用仓库部署脚本：
 
 ```bash
 git clone git@github.com:Ponyix/xiaomiev-mate-public.git
