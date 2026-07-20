@@ -169,7 +169,7 @@ rm -rf pgdata logs
 - GitHub Issues：[提交问题](https://github.com/Ponyix/xiaomiev-mate-public/issues)
 - 邮箱：`ponyix2026@gmail.com`
 
-## ⚠️ 免责声明
+## 🔒 隐私与数据说明
 
 - 本项目仅用于个人学习与数据管理，请遵守当地法律法规与小米服务协议。
 - 车辆、行程、账号配置等数据较敏感，请仅部署在可信环境中。
