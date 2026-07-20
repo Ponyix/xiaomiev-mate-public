@@ -13,7 +13,7 @@ Xiaomi EV Mate 是一个面向小米汽车车主的私有化数据管理工具�
 | 入口 | 链接                                                       |
 | --- |----------------------------------------------------------|
 | 🌐 官网首页 | [官方网站](http://www.xiaomievmate.com/)                     |
-| 🎮 在线演示 | [体验演示站](https://www.xiaomimate.com)                      |
+| 🎮 在线演示 | [体验演示站](https://demo.xiaomievmate.com/)                      |
 | 📘 快速开始 | [快速开始文档](http://www.xiaomievmate.com/issues/quick-start) |
 | 🚀 部署指南 | [部署指南](http://www.xiaomievmate.com/issues/deploy)        |
 | 🔐 小米账号配置 | [账号配置指南](http://www.xiaomievmate.com/issues/account)     |
