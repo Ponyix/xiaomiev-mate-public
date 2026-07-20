@@ -46,6 +46,20 @@ ponyix/xiaomiev-mate:backend-v1.0.x
 ponyix/xiaomiev-mate:web-v1.0.x
 ```
 
+### 镜像拉取失败时的备用镜像仓库
+
+如果 Docker Hub 拉取失败，可在 `docker-compose.yml` 中将对应服务的 `image` 替换为以下地址后重新部署：
+
+```yaml
+services:
+  postgres:
+    image: docker.xiaomievmate.com/postgres:15-alpine
+  xiaomiev-mate:
+    image: docker.xiaomievmate.com/ponyix/xiaomiev-mate:backend-latest
+  xiaomiev-mate-web:
+    image: docker.xiaomievmate.com/ponyix/xiaomiev-mate:web-latest
+```
+
 最新版本号请查看：[更新日志](http://www.xiaomievmate.com/changelog)。
 
 ## 🚀 快速部署
@@ -172,9 +186,11 @@ rm -rf pgdata logs
 ## 🔒 隐私与数据说明
 
 - 本项目仅用于个人学习与数据管理，请遵守当地法律法规与小米服务协议。
+- 本项目不会收集、存储或上传任何用户数据，不提供任何云端数据托管服务。
 - 车辆、行程、账号配置等数据较敏感，请仅部署在可信环境中。
+- 项目运行过程中产生的数据仅用于本地功能展示、统计分析和数据管理，不会主动发送至开发者服务器或任何第三方服务。
 - 因使用本项目导致的账号风控、服务异常、数据损失等风险，请自行承担。
-- 抓包、扫码登录等操作请确认由本人授权并妥善保存敏感信息。
+- 请确保部署环境安全可靠，避免因服务器暴露、数据库未授权访问、备份泄露等原因导致数据泄露。
 
 ## 🙏 致谢
 
