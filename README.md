@@ -1,12 +1,14 @@
 # 🚗 Xiaomi EV Mate
 
-![Docker Image](https://img.shields.io/badge/Docker-ponyix%2Fxiaomiev--mate-2496ED?logo=docker&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql&logoColor=white)
-![Deploy](https://img.shields.io/badge/Deploy-Docker%20Compose-0db7ed?logo=docker&logoColor=white)
+[![Docker Image](https://img.shields.io/badge/Docker-ponyix%2Fxiaomiev--mate-2496ED?logo=docker&logoColor=white)](https://hub.docker.com/r/ponyix/xiaomiev-mate)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql&logoColor=white)](https://hub.docker.com/_/postgres)
+[![Deploy](https://img.shields.io/badge/Deploy-Docker%20Compose-0db7ed?logo=docker&logoColor=white)](https://github.com/Ponyix/xiaomiev-mate-public/blob/main/docker-compose.yml)
+[![Release](https://img.shields.io/github/v/release/Ponyix/xiaomiev-mate-public?label=release&logo=github)](https://github.com/Ponyix/xiaomiev-mate-public/releases/latest)
+[![Docker Pulls](https://img.shields.io/docker/pulls/ponyix/xiaomiev-mate?label=docker%20pulls&logo=docker)](https://hub.docker.com/r/ponyix/xiaomiev-mate)
 
 Xiaomi EV Mate 是一个面向小米汽车车主的私有化数据管理工具，用于统一查看车辆状态、行程记录、充电分析、车况历史、统计数据和月度报告。
 
-> 建议部署在 NAS、家庭服务器或个人云主机等私有环境中。项目会保存车辆、行程和账号相关配置，请妥善保管数据库、日志和 `.env` 文件。
+> 建议部署在 NAS、家庭服务器或个人云主机等私有环境中。项目会保存车辆、行程和账号相关配置，请妥善保管数据库、`config`、日志和 `.env` 文件。
 
 ## ✨ 快速入口
 
@@ -97,6 +99,29 @@ DB_PASSWORD=your_password
 
 更完整的部署说明、端口配置和版本固定方式，请阅读：[部署指南](http://www.xiaomievmate.com/issues/deploy)。
 
+## 🔐 字段加密密钥目录
+
+新部署会把宿主机 `./config` 挂载到后端容器的 `/config`。v1.1.3 起，系统在首次初始化
+字段加密时将密钥环保存到：
+
+```text
+./config/.secrets/field-keyring.json
+```
+
+请将整个 `./config/.secrets` 与数据库分开备份，不要提交到 Git、上传到日志或反馈附件。
+密钥环丢失后，数据库中的小米账号和通知平台加密凭据无法恢复。
+
+如果需要更换宿主机目录，可以修改 Compose 挂载左侧路径：
+
+```yaml
+volumes:
+  - /mnt/docker/xiaomiev-config:/config
+```
+
+从其他目录迁移时必须复制原有 `.secrets`，不能让应用生成新密钥。使用旧版 Compose
+升级的存量用户可以继续使用已有 `./logs` 挂载，无需为了 v1.1.3 强制修改 Compose；
+密钥环会回退保存在 `./logs/.secrets`。
+
 ## 📌 固定版本部署
 
 如果不想使用 `latest`，可以在 `.env` 中固定镜像版本：
@@ -171,7 +196,7 @@ docker compose -f docker-compose.yml up -d
 
 ```bash
 docker compose -f docker-compose.yml down
-rm -rf pgdata logs
+rm -rf pgdata logs config
 ```
 
 ## 🛟 反馈与支持
