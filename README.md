@@ -1,10 +1,9 @@
 # 🚗 Xiaomi EV Mate
 
-[![Docker Image](https://img.shields.io/badge/Docker-ponyix%2Fxiaomiev--mate-2496ED?logo=docker&logoColor=white)](https://hub.docker.com/r/ponyix/xiaomiev-mate)
+[![Docker pulls](https://img.shields.io/docker/pulls/ponyix/xiaomiev-mate?label=ponyix%2Fxiaomiev-mate%20pulls&logo=docker)](https://hub.docker.com/r/ponyix/xiaomiev-mate)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql&logoColor=white)](https://hub.docker.com/_/postgres)
 [![Deploy](https://img.shields.io/badge/Deploy-Docker%20Compose-0db7ed?logo=docker&logoColor=white)](https://github.com/Ponyix/xiaomiev-mate-public/blob/main/docker-compose.yml)
 [![Release](https://img.shields.io/github/v/release/Ponyix/xiaomiev-mate-public?label=release&logo=github)](https://github.com/Ponyix/xiaomiev-mate-public/releases/latest)
-[![Docker Pulls](https://img.shields.io/docker/pulls/ponyix/xiaomiev-mate?label=docker%20pulls&logo=docker)](https://hub.docker.com/r/ponyix/xiaomiev-mate)
 
 Xiaomi EV Mate 是一个面向小米汽车车主的私有化数据管理工具，用于统一查看车辆状态、行程记录、充电分析、车况历史、统计数据和月度报告。
 
