@@ -98,29 +98,6 @@ DB_PASSWORD=your_password
 
 更完整的部署说明、端口配置和版本固定方式，请阅读：[部署指南](http://www.xiaomievmate.com/issues/deploy)。
 
-## 🔐 字段加密密钥目录
-
-新部署会把宿主机 `./config` 挂载到后端容器的 `/config`。v1.1.3 起，系统在首次初始化
-字段加密时将密钥环保存到：
-
-```text
-./config/.secrets/field-keyring.json
-```
-
-请将整个 `./config/.secrets` 与数据库分开备份，不要提交到 Git、上传到日志或反馈附件。
-密钥环丢失后，数据库中的小米账号和通知平台加密凭据无法恢复。
-
-如果需要更换宿主机目录，可以修改 Compose 挂载左侧路径：
-
-```yaml
-volumes:
-  - /mnt/docker/xiaomiev-config:/config
-```
-
-从其他目录迁移时必须复制原有 `.secrets`，不能让应用生成新密钥。使用旧版 Compose
-升级的存量用户可以继续使用已有 `./logs` 挂载，无需为了 v1.1.3 强制修改 Compose；
-密钥环会回退保存在 `./logs/.secrets`。
-
 ## 📌 固定版本部署
 
 如果不想使用 `latest`，可以在 `.env` 中固定镜像版本：
