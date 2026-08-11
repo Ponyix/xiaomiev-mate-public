@@ -8,6 +8,9 @@ BACKEND_CONTAINER="xiaomiev-mate"
 WEB_CONTAINER="xiaomiev-mate-web"
 ENV_FILE="${SCRIPT_DIR}/.env"
 ENV_EXAMPLE="${SCRIPT_DIR}/.env.example"
+CONFIG_DIR="${SCRIPT_DIR}/config"
+BACKUP_DIR="${CONFIG_DIR}/backup"
+LOG_DIR="${SCRIPT_DIR}/logs"
 
 if ! command -v docker >/dev/null 2>&1; then
   echo "未检测到 Docker，请先安装 Docker。"
@@ -41,6 +44,8 @@ fi
 
 BACKEND_IMAGE_TAG="${BACKEND_IMAGE_TAG:-latest}"
 WEB_IMAGE_TAG="${WEB_IMAGE_TAG:-latest}"
+
+mkdir -p "${LOG_DIR}" "${CONFIG_DIR}" "${BACKUP_DIR}"
 
 echo "==> 当前部署镜像版本"
 echo "后端镜像: ponyix/xiaomiev-mate:backend-${BACKEND_IMAGE_TAG}"
@@ -91,4 +96,6 @@ fi
 echo "==> 部署完成"
 echo "==> 前端访问地址: http://localhost:18080"
 echo "==> 默认账号密码: admin"
+echo "==> 加密密钥目录: ${CONFIG_DIR}/.secrets（请与数据库分开备份）"
+echo "==> 自动备份目录: ${BACKUP_DIR}"
 echo "如果是首次部署,登陆后请立即修改密码"

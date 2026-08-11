@@ -24,11 +24,13 @@ services:
     pull_policy: always
     volumes:
       - ./logs:/var/log/xiaomiev
+      - ./config:/config
     environment:
       - TZ=Asia/Shanghai
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/xiaomi_ev?stringtype=unspecified
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-you_password}
+      - XIAOMIEV_CONFIG_DIRECTORY=/config
     restart: always
     depends_on:
       postgres:
